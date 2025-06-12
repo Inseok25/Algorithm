@@ -22,7 +22,7 @@ public:
 			if (_predicate(_heap[now], _heap[next]))
 				break;
 
-			::swap((_heap[now], _heap[next]));
+			::swap(_heap[now], _heap[next]);
 			now = next;
 		}
 	}
@@ -43,17 +43,16 @@ public:
 				break;
 
 			int next = now;
-
-			if (_predicate(_heap[now], _heap[left]))
+			if (_predicate(_heap[next], _heap[left]))
 				next = left;
 
-			if (right < _heap.size() && _predicate(_heap[now], _heap[right]))
+			if (right < _heap.size() && _predicate(_heap[next], _heap[right]))
 				next = right;
 
 			if (next == now)
 				break;
-			::swap(_heap[now], _heap[next]);
 
+			::swap(_heap[now], _heap[next]);
 			now = next;
 		}
 	}
@@ -61,7 +60,6 @@ public:
 	T& top() { return _heap[0]; }
 	bool empty() { return _heap.empty(); }
 private:
-
 	Container _heap = {};
 	Predicate _predicate = {};
 };
