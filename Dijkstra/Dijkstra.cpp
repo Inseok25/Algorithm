@@ -1,35 +1,33 @@
 ﻿#include <iostream>
 #include <vector>
 #include <list>
-#include <queue>
 #include <stack>
-
+#include <queue>
 using namespace std;
 
 struct Vertex
 {
-	// data
+	// int data;
 };
 
-vector<Vertex> verticis;
-vector<vector<int>> adj;
+vector<Vertex> vertices;
+vector<vector<int>> adjacent; // 인접 행렬
 
 void CreateGraph()
 {
-	verticis.resize(6);
-	adj = vector<vector<int>>(6, vector<int>(6, -1));
+	vertices.resize(6);
+	adjacent = vector<vector<int>>(6, vector<int>(6, -1));
 
-	adj[0][1] = 15;
-	adj[0][3] = 35;
-	adj[1][0] = 15;
-	adj[1][2] = 5;
-	adj[1][3] = 10;
-	adj[1][3] = 10;
-	adj[3][4] = 5;
-	adj[5][4] = 5;
+	adjacent[0][1] = 15;
+	adjacent[0][3] = 35;
+	adjacent[1][0] = 15;
+	adjacent[1][2] = 5;
+	adjacent[1][3] = 10;
+	adjacent[3][4] = 5;
+	adjacent[5][4] = 5;
 }
 
-void Dijstra(int here)
+void Dijikstra(int here)
 {
 	struct VertexCost
 	{
@@ -37,19 +35,21 @@ void Dijstra(int here)
 		int cost;
 	};
 
-	list<VertexCost> discovered;
-	vector<int> best(6, INT32_MAX);
-	vector<int> parant(6, -1);
+	list<VertexCost> discovered; // 발견 목록
+	vector<int> best(6, INT32_MAX); // 각 정점별로 지금까지 발견한 최소 거리
+	vector<int> parent(6, -1);
 
 	discovered.push_back(VertexCost{ here, 0 });
 	best[here] = 0;
-	parant[here] = here;
+	parent[here] = here;
 
 	while (discovered.empty() == false)
 	{
+		// 제일 좋은 후보를 찾는다
 		list<VertexCost>::iterator bestIt;
 		int bestCost = INT32_MAX;
-		for (auto it = discovered.begin(); it != discovered.end();it++)
+
+		for (auto it = discovered.begin(); it != discovered.end(); it++)
 		{
 			if (it->cost < bestCost)
 			{
@@ -62,28 +62,35 @@ void Dijstra(int here)
 		here = bestIt->vertex;
 		discovered.erase(bestIt);
 
+		// 방문? 더 짧은 경로를 뒤늦게 찾았다면 스킵.
 		if (best[here] < cost)
 			continue;
 
+		// 방문!
+
 		for (int there = 0; there < 6; there++)
 		{
-			if (adj[here][there] == -1)
+			// 연결되지 않았으면 스킵.
+			if (adjacent[here][there] == -1)
 				continue;
 
-			int nextCost = best[here] + adj[here][there];
+			// 더 좋은 경로를 과거에 찾았으면 스킵.
+			int nextCost = best[here] + adjacent[here][there];
 			if (nextCost >= best[there])
 				continue;
 
 			discovered.push_back(VertexCost{ there, nextCost });
-
 			best[there] = nextCost;
-			parant[there] = here;
-
+			parent[there] = here;
 		}
 	}
+
+	int a = 3;
 }
+
 int main()
 {
 	CreateGraph();
-	return 0;
+
+	Dijikstra(0);
 }
