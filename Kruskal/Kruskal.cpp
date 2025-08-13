@@ -125,11 +125,11 @@ int Kruskal(vector<CostEdge>& selected)
 		// 같은 그룹이면 스킵 (안 그러면 사이클 발생)
 		if (sets.Find(edge.u) == sets.Find(edge.v))
 			continue;
-
+		 
 		// 두 그룹을 합친다
 		sets.Merge(edge.u, edge.v);
 		selected.push_back(edge);
-		ret += edge.cost;
+		ret += edge.cost; 
 	}
 
 	return ret;
